@@ -1,0 +1,202 @@
+# Chipo Chapusha
+#Purpose: To sort files
+
+# Read in each file
+# Sort the data by the criteria
+# Write the data out to the appropriate file
+
+"""
+In the fixedWidthDemographics.txt file there are four
+ fields.  See file layout information below.
+
+NOTE: The first line in this file is a header line.  it
+ should NOT be sorted.  
+
+== Instructions ==
+Sort the data that is in fixedWidthDemographics.txt by
+ 1. AGE
+ 2. LAST_NAME
+ 3. FIRST_NAME
+ 
+Write the sorted data into fixedWidthDemographics-out.txt
+Be sure to keep the header line at the top of this output
+ file.
+
+== File Layout Information==
+FIRST_NAME
+ Starts: 0
+ Length: 20
+LAST_NAME
+ Starts: 20
+ Length: 20
+AGE
+ Starts: 40
+ Length: 3
+BIRTHDATE
+ Starts: 43
+ Length: 10
+
+"""
+# fixedWidthDemographics.txt code goes here
+
+def sort_fixed_width_file(first_file, second_file):
+    with open(first_file, 'r') as infile:
+        # Read all lines
+        lines = infile.readlines()
+
+        # The first line is the header
+        header = lines[0]
+
+        # Extract data lines and remove the newline characters
+        data = [line.rstrip() for line in lines[1:]]
+
+        # Sort the data based on AGE (position 40-43), LAST_NAME (position 20-40), and FIRST_NAME (position 0-20)
+        sorted_data = sorted(data, key=lambda x: (int(x[40:43]), x[20:40].strip(), x[0:20].strip()))
+
+    # Write the header and sorted data back to the output file
+    with open(second_file, 'w') as outfile:
+        outfile.write(header)
+        outfile.writelines(line + '\n' for line in sorted_data)
+
+# File paths
+first_file = 'fixedWidthDemographics.txt'
+second_file = 'fixedWidthDemographics-out.txt'
+
+# Execute the sorting
+sort_fixed_width_file(first_file, second_file)
+
+
+"""
+In the movieData.csv file there are four fields.
+See the file Layout information below.
+
+NOTE: The first line in this file is a header line.  it
+ should NOT be sorted.  
+
+NOTE: CSV stands for Comma Separated Values  That is
+ each field is separated by a comma.  In this file, no
+ field has a comma in it (i.e., there is no need to wrap
+ fields in double quotes.)
+
+== Instructions ==
+Sort the data in the movieData.csv file by:
+ 1. Theaters
+ 2. Seats
+ 3. Movie title
+
+Write the sorted data into movieData-out.csv
+Be sure to keep the header line at the top of this output
+ file.
+
+== File Layout Information==
+Movie Title,Theaters,Seats,Ticket Prices
+Ant-Man and the Wasp,1717,151,15.99
+Movie Title
+ The name of the movie
+Theaters
+ How many theaters this movie debuted in
+Seats
+ Average number of seats per theater
+Ticket Prices
+ Average ticket price
+
+"""
+def sort_movie_data(old_file, new_file):
+    with open(old_file, 'r') as infile:
+        # Read all lines
+        lines = infile.readlines()
+
+        # The first line is the header
+        header = lines[0]
+
+        # Extract data lines (skip header) and split by commas
+        data = [line.strip().split(',') for line in lines[1:]]
+
+        # Sort by Theaters (index 1), Seats (index 2), and Movie Title (index 0)
+        sorted_data = sorted(data, key=lambda x: (int(x[1]), int(x[2]), x[0]))
+
+    # Print each column on a new line
+    for row in sorted_data:
+        for column in row:
+            print(column)
+        print("   ") 
+
+    # Write the header and sorted data to the output file
+    with open(new_file, 'w') as outfile:
+        # Write the header
+        outfile.write(header)
+
+        # Write the sorted data
+        for record in sorted_data:
+            outfile.write(','.join(record) + '\n')
+            outfile.write("The name of the movie is " + record[0] +'\n'+"The number of theaters this movie debuted in is " + record[1] +'\n'+ "The average number of seats per theater is " + record[2] + '\n'+ "The average ticket price is " + record[3] + '\n'+ "        " + '\n')  
+            
+            
+
+# File paths
+old_file = 'movieData.csv'
+new_file = 'movieData-out.csv'
+
+# Execute the sorting
+sort_movie_data(old_file, new_file)
+
+
+
+
+
+
+"""
+In the tabDelimitedList.txt file there are four fields.
+See the file Layout information below.
+
+NOTE: The first line in this file is a header line.  it
+ should NOT be sorted.  
+
+== Instructions ==
+Sort the data in the tabDelimitedList.txt file by:
+ 1. Key String (reverse)
+
+Write the sorted data into tabDelimitedList-out.csv
+NOTE: Convert this tab delimited file to a CSV file
+Be sure to keep the header line at the top of this output
+ file.
+
+== File Layout Information==
+Email address	
+ An email address
+Favorite NBA Team	
+ A person's favorite NBA team
+Random Item	
+ A random item
+Key String
+ A general key string
+"""
+# tabDelimitedList.txt code goes here
+
+import csv
+
+def sort_tab_delimited_to_csv(input_file, output_file):
+    with open(input_file, 'r') as infile:
+        # Read the header and data
+        header = infile.readline().strip()  # Read the header line
+        data = infile.readlines()            # Read the remaining lines
+
+    # Split each line by tab and sort by the last column (Key String) in reverse order
+    sorted_data = sorted([line.strip().split('\t') for line in data], key=lambda x: x[3], reverse=True)
+
+    # Write to the output CSV file
+    with open(output_file, 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+
+        # Write the header
+        writer.writerow(header.split('\t'))  # Write header split by tabs
+
+        # Write the sorted data
+        writer.writerows(sorted_data)
+
+# File paths
+input_file = 'tabDelimitedList.txt'
+output_file = 'tabDelimitedList-out.csv'
+
+# Execute the sorting and conversion
+sort_tab_delimited_to_csv(input_file, output_file)
